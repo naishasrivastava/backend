@@ -1,0 +1,24 @@
+# Mini Portfolio API
+
+A simple Node.js + Express API that exposes information about me, my projects, and one creative endpoint.
+
+## How to Run
+
+1. Clone this repo
+2. Run `npm install`
+3. Start the server with:
+4. Visit endpoints in your browser or Postman:
+- GET http://localhost:3000/api/about
+- GET http://localhost:3000/api/projects
+- POST http://localhost:3000/api/projects
+- GET http://localhost:3000/api/semester-status
+
+## Example JSON
+
+### /api/about
+{
+"name": "Naisha Srivastava",
+"major": "Computer Science",
+"interests": ["AR/VR", "HCI", "Robotics"],
+"funFact": "I built AR games at the UTD AR Lab."
+}

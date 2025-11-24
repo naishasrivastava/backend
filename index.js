@@ -1,71 +1,117 @@
 const express = require('express');
 const app = express();
 
-// Middleware to parse JSON bodies
 app.use(express.json());
 
-// In-memory "database"
-let todos = [
-  { id: 1, text: 'Learn backend', done: false },
-  { id: 2, text: 'Play with Postman', done: false },
-  //Add more
+// In-memory data
+const about = {
+  name: "Naisha Srivastava",
+  major: "Computer Science",
+  interests: [
+    "AR/VR",
+    "Human-Centered Computing",
+    "Robotics",
+    "UI/UX Design",
+    "NLP + Social Interaction"
+  ],
+  funFact: "I built AR games at the UT AR Lab and I love pandas."
+};
+
+let projects = [
+  {
+    id: 1,
+    title: "Sustainable DFW Map",
+    description: "Website showing sustainability ratings for restaurants and shops in Dallas Fort Worth.",
+    tech: ["HTML", "CSS", "JavaScript"],
+  },
+  {
+    id: 2,
+    title: "AR 3D UI Mini Game",
+    description: "Unity-based AR interaction prototype built for UT’s AR workshop.",
+    tech: ["Unity", "C#", "Vuforia"],
+  },
+  {
+    id: 3,
+    title: "Financial Literacy Research Tool",
+    description: "AP Capstone project exploring teen decision-making and social media influence.",
+    tech: ["Python", "thinkorswim"]
+  }
 ];
 
-// GET /todos - get all todos
-app.get('/todos', (req, res) => {
-  res.json(todos);
+// ---------- ROUTES ----------
+
+// GET /api/about
+app.get("/api/about", (req, res) => {
+  res.json(about);
 });
 
-// POST /todos - create a new todo
-app.post('/todos', (req, res) => {
-  const { text } = req.body;
-  if (!text) {
-    return res.status(400).json({ error: 'text is required' });
+// GET /api/projects
+app.get("/api/projects", (req, res) => {
+  res.json(projects);
+});
+
+// POST /api/projects
+app.post("/api/projects", (req, res) => {
+  const { title, description, tech } = req.body;
+
+  if (!title || !description) {
+    return res.status(400).json({ error: "title and description are required" });
   }
 
-  const newTodo = {
-    id: todos.length + 1,
-    text,
-    done: false,
+  const newProject = {
+    id: projects.length + 1,
+    title,
+    description,
+    tech: tech || []
   };
 
-  todos.push(newTodo);
-  res.status(201).json(newTodo);
+  projects.push(newProject);
+  res.status(201).json(newProject);
 });
 
-// PATCH /todos/:id - mark a todo as done
-app.patch('/todos/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const todo = todos.find((t) => t.id === id);
 
-  if (!todo) {
-    return res.status(404).json({ error: 'Todo not found' });
-  }
+// GET /api/semester-status
+app.get("/api/semester-status", (req, res) => {
+  const vibes = [
+    "Surviving but barely",
+    "Powered by iced coffee",
+    "Everything is due at once help",
+    "Actually thriving today???",
+    "Touching grass more often",
+    "Prelims stole my soul"
+  ];
 
-  todo.done = true;
-  res.json(todo);
-});
-
-// DELETE /todos/:id - delete a todo
-app.delete('/todos/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const index = todos.findIndex((t) => t.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'Todo not found' });
-  }
-
-  const deletedTodo = todos[index];
-  todos.splice(index, 1);
+  const randomVibe = vibes[Math.floor(Math.random() * vibes.length)];
 
   res.json({
-    message: 'Todo deleted successfully',
-    todo: deletedTodo
+    status: randomVibe,
+    timestamp: new Date().toISOString()
   });
 });
 
-// Start server
+// GET /api/favorites
+app.get("/api/favorites", (req, res) => {
+  res.json({
+    songs: [
+      "Why – Sabrina Carpenter",
+      "bet u wanna – Sabrina Carpenter",
+      "Seoul City – Jennie",
+    ],
+    drinks: [
+      "Iced Tea",
+      "Lychee Black Tea",
+      "Coffee"
+    ],
+    shows: [
+      "Business Proposal",
+      "Brooklyn 99",
+      "Love Scout",
+    ]
+  });
+});
+
+// ---------- START SERVER ----------
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
